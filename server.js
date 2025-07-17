@@ -8,6 +8,7 @@ app.use(express.static('public'));
 
 wss.on('connection', (ws) => {
   ws.on('message', (data) => {
+    // 受け取ったデータをそのまま全クライアントへ
     wss.clients.forEach(client => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(data);
