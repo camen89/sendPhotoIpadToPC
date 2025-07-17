@@ -12,7 +12,7 @@
     const ws = new WebSocket(`wss://${location.host}`);
     ws.onmessage = (event) => {
       const img = document.createElement('img');
-      img.src = event.data;
+      img.src = event.data;  // 受け取った DataURL をそのまま使う
       img.style = 'max-width:80%; margin:10px;';
       document.getElementById('images').prepend(img);
     };
