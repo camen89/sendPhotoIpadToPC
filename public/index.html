@@ -9,14 +9,15 @@
   <div id="images"></div>
 
   <script>
-    const ws = new WebSocket(`wss://${location.host}`);
+  const ws = new WebSocket(`wss://${location.host}`);
   ws.onmessage = (event) => {
-    console.log('Received data:', event.data);  // ✅ onmessageの中に入れる
+    console.log('Received data:', event.data);  // ✅ 必ず onmessage 内
     const img = document.createElement('img');
     img.src = event.data;
     img.style = 'max-width:80%; margin:10px;';
     document.getElementById('images').prepend(img);
   };
-  </script>
+</script>
+
 </body>
 </html>
