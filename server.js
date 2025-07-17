@@ -8,10 +8,18 @@ app.use(express.static('public'));
 
 wss.on('connection', (ws) => {
   ws.on('message', (data) => {
-    // 受け取ったデータをそのまま全クライアントへ
+    // data が Buffer の場合は文字列化する
+    let msg;
+    if (Buffer.isBuffer(data)) {
+      msg = data.toString('utf8');
+    } else {
+      msg = data;
+    }
+
+    // 受け取ったメッセージを全クライアントに送信
     wss.clients.forEach(client => {
       if (client.readyState === WebSocket.OPEN) {
-        client.send(data);
+        client.send(msg);
       }
     });
   });
