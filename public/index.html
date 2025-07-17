@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Received Images</title>
 </head>
 <body>
@@ -9,15 +9,32 @@
   <div id="images"></div>
 
   <script>
-  const ws = new WebSocket(`wss://${location.host}`);
-  ws.onmessage = (event) => {
-    console.log('Received data:', event.data);  // ✅ 必ず onmessage 内
-    const img = document.createElement('img');
-    img.src = event.data;
-    img.style = 'max-width:80%; margin:10px;';
-    document.getElementById('images').prepend(img);
-  };
-</script>
+    const ws = new WebSocket(`wss://${location.host}`);
 
+    // 受信データを ArrayBuffer で受け取る設定
+    ws.binaryType = "arraybuffer";
+
+    ws.onmessage = (event) => {
+      let dataStr;
+
+      if (event.data instanceof ArrayBuffer) {
+        // ArrayBuffer を UTF-8 文字列に変換
+        const decoder = new TextDecoder("utf-8");
+        dataStr = decoder.decode(event.data);
+      } else if (typeof event.data === "string") {
+        dataStr = event.data;
+      } else {
+        console.warn("Unknown data type received:", event.data);
+        return;
+      }
+
+      console.log("Received data string length:", dataStr.length);
+
+      const img = document.createElement("img");
+      img.src = dataStr;  // DataURL のはず
+      img.style = "max-width:80%; margin:10px;";
+      document.getElementById("images").prepend(img);
+    };
+  </script>
 </body>
 </html>
